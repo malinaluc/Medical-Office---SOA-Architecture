@@ -37,7 +37,7 @@ public class LoginController {
 
             LanguageManager.loadLanguage(LanguageManager.stirngToLanguage(selectedLanguage));
             UserDTO user = userService.LoginAction(username, password);
-
+            if (user == null) logDebug("[Handle login action ] user null");
             if (user != null) {
 
                 if (user.getRole() == 2) showMedicForm();

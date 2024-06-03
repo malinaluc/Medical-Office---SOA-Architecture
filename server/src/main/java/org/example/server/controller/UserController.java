@@ -22,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(name = "/GetAllUsers")
+    @GetMapping("/GetAllUsers")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         List<UserDTO> userDTOS = new ArrayList<>();
@@ -30,7 +30,7 @@ public class UserController {
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/login", name = "LoginUser")
+    @GetMapping("/login")
     public ResponseEntity<UserDTO> loginUser(@RequestBody LoginRequest loginRequest) {
 
         User user = userService.verifyCredentials(loginRequest.getUsername(), loginRequest.getPassword());
@@ -42,5 +42,31 @@ public class UserController {
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PostMapping("/AddUser")
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+        User newUser = userService.addUser(user);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/UpdateUser/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) {
+        User updateUser = userService.updateUser(id, user);
+        return updateUser != null ? new ResponseEntity<>(updateUser, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/DeleteUser/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+        userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/FilterByUserType/{userType}")
+    public ResponseEntity<List<UserDTO>> getAllUsersByUserType(@PathVariable Integer userType) {
+        List<User> users = userService.findyAllUsersByUserType(userType);
+        List<UserDTO> userDTOS = new ArrayList<>();
+        users.forEach(u -> userDTOS.add(userService.userToDTO(u)));
+        return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
 }

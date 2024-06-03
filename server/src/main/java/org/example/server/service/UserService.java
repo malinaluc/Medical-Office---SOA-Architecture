@@ -49,4 +49,24 @@ public class UserService {
 
     }
 
+    public User addUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public User updateUser(Integer userId, User user) {
+        if (userRepository.existsById(userId)) {
+            user.setIdUser(userId);
+            return userRepository.save(user);
+        }
+        return null;
+    }
+
+    public void deleteUser(Integer idUSer) {
+        userRepository.deleteById(idUSer);
+    }
+
+    public List<User> findyAllUsersByUserType(Integer userType) {
+        return userRepository.findAllByRole(userType);
+    }
+
 }

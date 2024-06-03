@@ -11,6 +11,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import static org.example.client.utils.ExtensionFunctions.logDebug;
+
 @Service
 public class UserService {
 
@@ -24,6 +26,7 @@ public class UserService {
 
     public UserDTO LoginAction(String username, String password) throws IOException, InterruptedException {
 
+        logDebug("Am ajuns in LoginAction");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", username);
         jsonObject.put("password", password);
