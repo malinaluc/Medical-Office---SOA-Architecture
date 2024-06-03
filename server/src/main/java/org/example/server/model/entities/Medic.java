@@ -1,5 +1,7 @@
 package org.example.server.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,5 +36,10 @@ public class Medic {
     @JoinColumn(name = "idSpecializatiom", referencedColumnName = "idSpecialization")
     private Specialization idSpecialization;
 
+
+    @JsonCreator
+    public Medic(@JsonProperty("id") Integer id) {
+        this.idMedic = id;
+    }
 
 }

@@ -35,4 +35,13 @@ public class MedicalRecord {
     @ManyToOne
     @JoinColumn(name = "idAsistent", referencedColumnName = "idUser")
     private User idAsistent;
+
+    public MedicalRecord(Integer idfisaMedicala, String patientName, String symptoms, String treatment, String diagnostic, Integer patientAge) {
+        this.idfisaMedicala = idfisaMedicala;
+        this.patientName = patientName;
+        this.symptoms = symptoms;
+        this.treatment = treatment;
+        this.diagnostic = diagnostic;
+        this.patientAge = patientAge;
+    }
 }
