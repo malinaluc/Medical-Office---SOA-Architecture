@@ -30,7 +30,7 @@ public class UserController {
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<UserDTO> loginUser(@RequestBody LoginRequest loginRequest) {
 
         User user = userService.verifyCredentials(loginRequest.getUsername(), loginRequest.getPassword());

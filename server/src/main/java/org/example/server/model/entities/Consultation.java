@@ -26,4 +26,5 @@ public class Consultation {
     @ManyToOne
     @JoinColumn(name = "idMedic", referencedColumnName = "idMedic")
     private Medic idMedic;
+
 }

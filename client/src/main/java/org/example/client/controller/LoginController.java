@@ -28,18 +28,21 @@ public class LoginController {
 
     private void handleLoginAction() {
 
+        String username = loginForm.getUsernameTextField().getText();
+        char[] passwordChar = loginForm.getPasswordTextField().getPassword();
+        String password = new String(passwordChar);
+        String selectedLanguage = String.valueOf(loginForm.getLanguageComboBox().getSelectedItem());
+        logDebug("Username = " + username + " and Password = " + password);
+
+        LanguageManager.loadLanguage(LanguageManager.stirngToLanguage(selectedLanguage));
+        
+
         try {
-            String username = loginForm.getUsernameTextField().getText();
-            char[] passwordChar = loginForm.getPasswordTextField().getPassword();
-            String password = new String(passwordChar);
-            String selectedLanguage = String.valueOf(loginForm.getLanguageComboBox().getSelectedItem());
-            logDebug("Username = " + username + " and Password = " + password);
-
-            LanguageManager.loadLanguage(LanguageManager.stirngToLanguage(selectedLanguage));
             UserDTO user = userService.LoginAction(username, password);
-            if (user == null) logDebug("[Handle login action ] user null");
-            if (user != null) {
 
+            if (user == null) logDebug("[Handle login action ] user null");
+
+            if (user != null) {
                 if (user.getRole() == 2) showMedicForm();
                 else if (user.getRole() == 1) showAdminForm();
                 else showAsistentForm();
