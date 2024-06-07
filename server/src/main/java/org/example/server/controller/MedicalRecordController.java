@@ -1,6 +1,10 @@
 package org.example.server.controller;
 
+import org.example.server.dto.CreateMedicalRecordDTO;
 import org.example.server.dto.MedicalRecordDTO;
+import org.example.server.dto.MedicalRecordUpdateByAsistentDTO;
+import org.example.server.dto.MedicalRecordUpdateByMedicDTO;
+import org.example.server.exception.NoSuchEntityException;
 import org.example.server.model.entities.MedicalRecord;
 import org.example.server.service.MedicService;
 import org.example.server.service.MedicalRecordService;

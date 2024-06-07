@@ -70,7 +70,7 @@ public class UserService {
     }
 
     public User findUserByID(Integer idUser) {
-        return userRepository.findUserByIdUser(idUser);
+        return userRepository.findByIdUser(idUser);
     }
 
 }
