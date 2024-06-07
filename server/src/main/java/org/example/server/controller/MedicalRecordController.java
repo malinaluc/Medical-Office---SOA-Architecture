@@ -60,7 +60,7 @@ public class MedicalRecordController {
         auxMedicalRecord.setPatientAge(medicalRecord.getPatientAge());
 
         // fk are type Medic and User
-        auxMedicalRecord.setIdAsistent(userService.findByIdUser(medicalRecord.getIdAsistent().getIdUser()));
+        auxMedicalRecord.setIdAsistent(userService.findUserByID(medicalRecord.getIdAsistent().getIdUser()));
         auxMedicalRecord.setIdMedic(medicService.findMedicByIdMedic(medicalRecord.getIdMedic().getIdMedic()));
 
         MedicalRecord newMedicalRecord = medicalRecordService.addMedicalRecord(auxMedicalRecord);

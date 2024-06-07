@@ -69,8 +69,8 @@ public class UserService {
         return userRepository.findAllByRole(userType);
     }
 
-    public User findByIdUser(Integer idUser) {
-        return userRepository.findByIdUser(idUser);
+    public User findUserByID(Integer idUser) {
+        return userRepository.findUserByIdUser(idUser);
     }
 
 }

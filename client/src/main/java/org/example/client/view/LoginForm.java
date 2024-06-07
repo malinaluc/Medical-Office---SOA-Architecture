@@ -36,7 +36,6 @@ public class LoginForm {
 
         loginController = new LoginController(this);
         addLanguages();
-
     }
 
     private void addLanguages() {
@@ -107,6 +106,7 @@ public class LoginForm {
         final Spacer spacer8 = new Spacer();
         panel2.add(spacer8, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         skipLoginButton = new JButton();
+        skipLoginButton.setBackground(new Color(-2383653));
         skipLoginButton.setText("Skip Login");
         panel2.add(skipLoginButton, new GridConstraints(11, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer9 = new Spacer();
