@@ -69,4 +69,11 @@ public class UserController {
         users.forEach(u -> userDTOS.add(userService.userToDTO(u)));
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
+
+    @GetMapping("/FindUserByID/{idUser}")
+    public ResponseEntity<UserDTO> findUserById(@PathVariable Integer idUser) {
+        User user = userService.findUserByID(idUser);
+        UserDTO userDTO = userService.userToDTO(user);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    }
 }
