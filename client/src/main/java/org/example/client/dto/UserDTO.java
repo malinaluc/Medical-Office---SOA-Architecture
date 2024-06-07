@@ -20,4 +20,5 @@ public class UserDTO {
     public void setRole(Integer role) {
         this.role = role;
     }
+
 }

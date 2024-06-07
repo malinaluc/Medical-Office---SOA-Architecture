@@ -32,4 +32,5 @@ public class User {
      */
     @NotNull
     private Integer role;
+
 }

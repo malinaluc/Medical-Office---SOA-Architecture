@@ -13,6 +13,7 @@ public class AsistentController {
     public AsistentController(AsistentForm asistentForm) {
         this.asistentForm = asistentForm;
         asistentForm.getAsistentLogOutButton().addActionListener(e -> handleLogOutAction());
+        asistentForm.getAsistentVizualizareStatisticiButton().addActionListener(e -> handleViewStatisticsAtion());
     }
 
 
@@ -28,4 +29,10 @@ public class AsistentController {
         loginFrame.setVisible(true); // Make the frame visible
         SessionManager.logOutUser();
     }
+
+    public void handleViewStatisticsAtion() {
+
+    }
+
+
 }

@@ -61,6 +61,7 @@ public class AdminForm {
         adminController = new AdminController(this, userService);
         initComboBox();
         languageSetter();
+
     }
 
     public void initComboBox() {
