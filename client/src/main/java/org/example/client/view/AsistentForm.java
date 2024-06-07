@@ -176,7 +176,7 @@ public class AsistentForm {
         asistentIconLabel.setText("");
         asistentMainPanel.add(asistentIconLabel, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         asistentLabel = new JLabel();
-        Font asistentLabelFont = this.getFontAsistentForm("Castellar", Font.BOLD, 22, asistentLabel.getFont());
+        Font asistentLabelFont = this.$$$getFont$$$("Castellar", Font.BOLD, 22, asistentLabel.getFont());
         if (asistentLabelFont != null) asistentLabel.setFont(asistentLabelFont);
         asistentLabel.setForeground(new Color(-13893586));
         asistentLabel.setText("Asistent");
@@ -358,7 +358,7 @@ public class AsistentForm {
     /**
      * @noinspection ALL
      */
-    private Font getFontAsistentForm(String fontName, int style, int size, Font currentFont) {
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
         if (currentFont == null) return null;
         String resultName;
         if (fontName == null) {
@@ -382,6 +382,28 @@ public class AsistentForm {
      */
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font getFontAsistentForm(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
 }

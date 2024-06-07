@@ -5,6 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import lombok.Getter;
 import org.example.client.controller.MedicController;
+import org.example.client.service.MedicalRecordService;
 import org.example.client.utils.LanguageManager;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ import java.util.Locale;
 
 @Getter
 public class MedicForm {
+    private final MedicalRecordService medicalRecordServie = new MedicalRecordService();
     private JPanel panel1;
     private JLabel medicIconLabel;
     private JLabel medicLabel;
@@ -63,7 +65,7 @@ public class MedicForm {
     }
 
     public MedicForm() {
-        medicController = new MedicController(this);
+        medicController = new MedicController(this, medicalRecordServie);
         languageSetter();
     }
 

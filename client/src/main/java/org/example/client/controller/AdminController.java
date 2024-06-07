@@ -1,6 +1,8 @@
 package org.example.client.controller;
 
 
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
 import org.example.client.dto.UserDTO;
 import org.example.client.service.UserService;
 import org.example.client.utils.SessionManager;
@@ -13,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class AdminController {
+    public static final String ACCOUNT_SID = "AC1192176dece59cd65f6a358f624f18e5";
+    public static final String AUTH_TOKEN = "1e17f776042eded03564aeddf31d11ce";
     private final UserService userService;
     AdminForm adminForm;
 
@@ -72,6 +76,14 @@ public class AdminController {
             userService.addUser(user);
             handleViewAllUsers();
 
+
+            Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+            Message message = Message.creator(
+                            new com.twilio.type.PhoneNumber("+40754403291"),
+                            new com.twilio.type.PhoneNumber("+16089999053"),
+                            "Utilizator Creat Cu Succes !! ")
+                    .create();
+
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -93,6 +105,12 @@ public class AdminController {
 
             userService.updateUser(idUser, userDTO);
             handleViewAllUsers();
+
+            Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+            Message message2 = Message.creator(
+                    new com.twilio.type.PhoneNumber("whatsapp:+40754403291"),
+                    new com.twilio.type.PhoneNumber("whatsapp:+14155238886"),
+                    "Utilizator Actualizat Cu Succes :) ").create();
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
