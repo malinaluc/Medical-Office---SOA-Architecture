@@ -62,7 +62,7 @@ public class LoginForm {
         panel2.setBackground(new Color(-2526763));
         panel1.add(panel2, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         loginLabel = new JLabel();
-        Font loginLabelFont = this.$$$getFont$$$("Castellar", Font.BOLD, 22, loginLabel.getFont());
+        Font loginLabelFont = this.getFontLogin("Castellar", Font.BOLD, 22, loginLabel.getFont());
         if (loginLabelFont != null) loginLabel.setFont(loginLabelFont);
         loginLabel.setText("Login");
         panel2.add(loginLabel, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -124,7 +124,7 @@ public class LoginForm {
     /**
      * @noinspection ALL
      */
-    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+    private Font getFontLogin(String fontName, int style, int size, Font currentFont) {
         if (currentFont == null) return null;
         String resultName;
         if (fontName == null) {

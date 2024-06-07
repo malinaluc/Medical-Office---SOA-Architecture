@@ -1,12 +1,13 @@
 package org.example.server.controller;
 
+import org.example.server.dto.CreateMedicalRecordDTO;
 import org.example.server.dto.MedicalRecordDTO;
+import org.example.server.dto.MedicalRecordUpdateByAsistentDTO;
+import org.example.server.dto.MedicalRecordUpdateByMedicDTO;
+import org.example.server.exception.NoSuchEntityException;
 import org.example.server.model.entities.MedicalRecord;
-import org.example.server.service.MedicService;
 import org.example.server.service.MedicalRecordService;
-import org.example.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,77 +19,148 @@ import java.util.List;
 public class MedicalRecordController {
 
     private final MedicalRecordService medicalRecordService;
-    private final MedicService medicService;
-    private final UserService userService;
 
     @Autowired
-    public MedicalRecordController(MedicalRecordService medicalRecordService, MedicService medicService, UserService userService) {
+    public MedicalRecordController(MedicalRecordService medicalRecordService) {
         this.medicalRecordService = medicalRecordService;
-        this.medicService = medicService;
-        this.userService = userService;
+    }
+
+    @PutMapping("/UpdateMedicalRecordByMedic/{id}")
+    public ResponseEntity<String> updateMedicalRecordByMedic(@PathVariable Long id, @RequestBody MedicalRecordUpdateByMedicDTO medicalRecordUpdateByMedicDTO) {
+        try {
+            medicalRecordService.updateMedicalRecordByMedic(id, medicalRecordUpdateByMedicDTO);
+        }
+        catch (NoSuchEntityException e) {
+            return ResponseEntity.status(400).body("Medical Record does not exist...");
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(400).body("Medical Record Update Fail!");
+        }
+        return ResponseEntity.status(200).body("Medical Record has been updated successfully!");
+    }
+
+    @PutMapping("/UpdateMedicalRecordByAsistent/{id}")
+    public ResponseEntity<String> updateMedicalRecordByAsistent(@PathVariable Long id, @RequestBody MedicalRecordUpdateByAsistentDTO medicalRecordUpdateByAsistentDTO) {
+        try {
+            medicalRecordService.updateMedicalRecordByAsistent(id, medicalRecordUpdateByAsistentDTO);
+        } catch (NoSuchEntityException e) {
+            return ResponseEntity.status(400).body("Medical Record does not exist...");
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(400).body("Medical Record Update Fail!");
+        }
+        return ResponseEntity.status(200).body("Medical Record has been updated successfully!");
+    }
+
+    @DeleteMapping("/DeleteMedicalRecord/{id}")
+    public ResponseEntity<String> deleteMedicalRecord(@PathVariable Long id) {
+        try {
+            medicalRecordService.deleteMedicalRecord(id);
+        } catch (NoSuchEntityException e) {
+            return ResponseEntity.status(400).body("Medical Record does not exist...");
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("There was an error while deleting the Medical Record");
+        }
+        return ResponseEntity.status(200).body("Medical Record has been deleted successfully!");
+    }
+
+    @PostMapping("/AddMedicalRecord")
+    public ResponseEntity<String> addMedicalRecord(@RequestBody CreateMedicalRecordDTO createMedicalRecordDTO) {
+        try {
+            medicalRecordService.addMedicalRecord(createMedicalRecordDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.toString());
+        }
+        return ResponseEntity.status(200).body("Medical Record created successfully!");
     }
 
     @GetMapping("/GetAllMedicalRecords")
     public ResponseEntity<List<MedicalRecordDTO>> getAllMedicalRecords() {
-        List<MedicalRecord> medicalRecords = medicalRecordService.getAllMedicalRecords();
-        List<MedicalRecordDTO> medicalRecordDTOS = new ArrayList<>();
-        medicalRecords.forEach(m -> medicalRecordDTOS.add(medicalRecordService.medicalRecordToDTO(m)));
-        return new ResponseEntity<>(medicalRecordDTOS, HttpStatus.OK);
-    }
-
-    @PutMapping("/UpdateMedicalRecord/{id}")
-    public ResponseEntity<MedicalRecord> updateMedicalRecord(@PathVariable Integer id, @RequestBody MedicalRecord medicalRecord) {
-        MedicalRecord updateMedicalRecord = medicalRecordService.updateMedicalRecord(id, medicalRecord);
-        return updateMedicalRecord != null ? new ResponseEntity<>(updateMedicalRecord, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @DeleteMapping("/DeleteMedicalRecord/{id}")
-    public ResponseEntity<Void> deleteMedicalRecord(@PathVariable Integer id) {
-        medicalRecordService.deleteMedicalRecord(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PostMapping("/AddMedicalRecord")
-    public ResponseEntity<MedicalRecord> addMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
-
-        MedicalRecord auxMedicalRecord = new MedicalRecord();
-        //auxMedicalRecord.setIdfisaMedicala(medicalRecord.getIdfisaMedicala());
-        auxMedicalRecord.setDiagnostic(medicalRecord.getDiagnostic());
-        auxMedicalRecord.setSymptoms(medicalRecord.getSymptoms());
-        auxMedicalRecord.setTreatment(medicalRecord.getTreatment());
-        auxMedicalRecord.setPatientName(medicalRecord.getPatientName());
-        auxMedicalRecord.setPatientAge(medicalRecord.getPatientAge());
-
-        // fk are type Medic and User
-        auxMedicalRecord.setIdAsistent(userService.findByIdUser(medicalRecord.getIdAsistent().getIdUser()));
-        auxMedicalRecord.setIdMedic(medicService.findMedicByIdMedic(medicalRecord.getIdMedic().getIdMedic()));
-
-        MedicalRecord newMedicalRecord = medicalRecordService.addMedicalRecord(auxMedicalRecord);
-        return new ResponseEntity<>(newMedicalRecord, HttpStatus.CREATED);
+        try {
+            var medicalRecordList = medicalRecordService.getAllMedicalRecords();
+            ArrayList<MedicalRecordDTO> medicalRecords = medicalRecordsToMedicalRecordsDTO(medicalRecordList);
+            return ResponseEntity.status(200).body(medicalRecords);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(new ArrayList<>());
+        }
     }
 
     @GetMapping("/GetAllMedicalRecordsByDiagnostic/{diagnostic}")
-    public ResponseEntity<List<MedicalRecordDTO>> getAllMedicalRecordsByDiagnostic(@PathVariable String diagnostic) {
-        List<MedicalRecord> medicalRecords = medicalRecordService.filterByDiagnostic(diagnostic);
-        List<MedicalRecordDTO> medicalRecordDTOS = new ArrayList<>();
-        medicalRecords.forEach(m -> medicalRecordDTOS.add(medicalRecordService.medicalRecordToDTO(m)));
-        return new ResponseEntity<>(medicalRecordDTOS, HttpStatus.OK);
+    public ResponseEntity<ArrayList<MedicalRecordDTO>> getAllMedicalRecordsByDiagnostic(@PathVariable String diagnostic) {
+        try {
+            var medicalRecordList = medicalRecordService.getAllMedicalRecordsByDiagnostic(diagnostic);
+            ArrayList<MedicalRecordDTO> medicalRecords = medicalRecordsToMedicalRecordsDTO(medicalRecordList);
+            return ResponseEntity.status(200).body(medicalRecords);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(new ArrayList<>());
+        }
     }
 
     @GetMapping("/GetAllMedicalRecordsByTreatment/{treatment}")
-    public ResponseEntity<List<MedicalRecordDTO>> getAllMedicalRecordsByTreatment(@PathVariable String treatment) {
-        List<MedicalRecord> medicalRecords = medicalRecordService.filterByTreatment(treatment);
-        List<MedicalRecordDTO> medicalRecordDTOS = new ArrayList<>();
-        medicalRecords.forEach(m -> medicalRecordDTOS.add(medicalRecordService.medicalRecordToDTO(m)));
-        return new ResponseEntity<>(medicalRecordDTOS, HttpStatus.OK);
+    public ResponseEntity<ArrayList<MedicalRecordDTO>> getAllMedicalRecordsByTreatment(@PathVariable String treatment) {
+        try {
+            var medicalRecordList = medicalRecordService.getAllMedicalRecordsByTreatment(treatment);
+            ArrayList<MedicalRecordDTO> medicalRecords = medicalRecordsToMedicalRecordsDTO(medicalRecordList);
+            return ResponseEntity.status(200).body(medicalRecords);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(new ArrayList<>());
+        }
     }
 
-    @GetMapping("/GetMedicalRecordByPatientName/{patientName}")
-    public ResponseEntity<List<MedicalRecordDTO>> getMedicalRecordByPatientName(@PathVariable String patientName) {
-        List<MedicalRecord> medicalRecords = medicalRecordService.findMedicalRecordByPatientName(patientName);
-        List<MedicalRecordDTO> medicalRecordDTOS = new ArrayList<>();
-        medicalRecords.forEach(m -> medicalRecordDTOS.add(medicalRecordService.medicalRecordToDTO(m)));
-        return new ResponseEntity<>(medicalRecordDTOS, HttpStatus.OK);
+    @GetMapping("/GetAllMedicalRecordsByIdMedic/{id}")
+    public ResponseEntity<ArrayList<MedicalRecordDTO>> getAllMedicalRecordsByIdMedic(@PathVariable Long id){
+        try {
+            var medicalRecordList = medicalRecordService.getAllMedicalRecordsByIdMedic(id);
+            ArrayList<MedicalRecordDTO> medicalRecords = medicalRecordsToMedicalRecordsDTO(medicalRecordList);
+            return ResponseEntity.status(200).body(medicalRecords);
+        } catch (Exception e){
+            return ResponseEntity.status(400).body(new ArrayList<>());
+        }
     }
 
+    @GetMapping("/GetAllMedicalRecordsByPatientName/{patientName}")
+    public ResponseEntity<ArrayList<MedicalRecordDTO>> getAllMedicalRecordsByPatientName(@PathVariable String patientName){
+        try {
+            var medicalRecordList = medicalRecordService.getAllMedicalRecordsByPatientName(patientName);
+            ArrayList<MedicalRecordDTO> medicalRecords = medicalRecordsToMedicalRecordsDTO(medicalRecordList);
+            return ResponseEntity.status(200).body(medicalRecords);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/GetAllMedicalRecordsByPatientAge/{patientAge}")
+    public ResponseEntity<ArrayList<MedicalRecordDTO>> getAllMedicalRecordsByPatientAge(@PathVariable Integer patientAge){
+        try {
+            var medicalRecordList = medicalRecordService.getAllMedicalRecordsByPatientAge(patientAge);
+            ArrayList<MedicalRecordDTO> medicalRecords = medicalRecordsToMedicalRecordsDTO(medicalRecordList);
+            return ResponseEntity.status(200).body(medicalRecords);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(new ArrayList<>());
+        }
+    }
+
+
+    /**
+     * @param medicalRecordList is the list of MedicalRecord that has the idMedic type Medic and idAsistent type User
+     * @return medicalRecords is the list of MedicalRecords where idMedic and idAsistent are Long
+     */
+    private static ArrayList<MedicalRecordDTO> medicalRecordsToMedicalRecordsDTO(ArrayList<MedicalRecord> medicalRecordList) {
+        ArrayList<MedicalRecordDTO> medicalRecords = new ArrayList<>();
+        for(MedicalRecord medicalRecord : medicalRecordList) {
+            MedicalRecordDTO medicalRecordDTO = new MedicalRecordDTO();
+
+            medicalRecordDTO.setIdfisaMedicala(medicalRecord.getIdfisaMedicala());
+            medicalRecordDTO.setPatientName(medicalRecord.getPatientName());
+            medicalRecordDTO.setPatientAge(medicalRecord.getPatientAge());
+            medicalRecordDTO.setSymptoms(medicalRecord.getSymptoms());
+            medicalRecordDTO.setTreatment(medicalRecord.getTreatment());
+            medicalRecordDTO.setDiagnostic(medicalRecord.getDiagnostic());
+            medicalRecordDTO.setIdMedic(medicalRecord.getIdMedic().getIdMedic().longValue());
+            medicalRecordDTO.setIdAsistent(medicalRecord.getIdAsistent().getIdUser().longValue());
+
+            medicalRecords.add(medicalRecordDTO);
+        }
+        return medicalRecords;
+    }
 }

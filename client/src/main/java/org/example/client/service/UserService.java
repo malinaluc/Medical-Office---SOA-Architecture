@@ -16,7 +16,7 @@ import static org.example.client.utils.ExtensionFunctions.logDebug;
 @Service
 public class UserService {
 
-    private static final String BASE_URL = "http://localhost:8080/api/user";
+    private static final String BASE_URL = "http://localhost:8090/api/user";
 
     private final HttpClient client;
 

@@ -43,5 +43,4 @@ public class ConsultationController {
         consultations.forEach(c -> consultationDTOS.add(consultationService.consultationToDTO(c)));
         return new ResponseEntity<>(consultationDTOS, HttpStatus.OK);
     }
-
 }

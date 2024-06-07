@@ -67,7 +67,7 @@ public class AdminForm {
         adminMainPanel.setBackground(new Color(-2526763));
         panel1.add(adminMainPanel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         adminLabel = new JLabel();
-        Font adminLabelFont = this.$$$getFont$$$("Castellar", Font.BOLD, 22, adminLabel.getFont());
+        Font adminLabelFont = this.getFontAdminForm("Castellar", Font.BOLD, 22, adminLabel.getFont());
         if (adminLabelFont != null) adminLabel.setFont(adminLabelFont);
         adminLabel.setForeground(new Color(-13893586));
         adminLabel.setText("ADMIN");
@@ -162,7 +162,7 @@ public class AdminForm {
     /**
      * @noinspection ALL
      */
-    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+    private Font getFontAdminForm(String fontName, int style, int size, Font currentFont) {
         if (currentFont == null) return null;
         String resultName;
         if (fontName == null) {
